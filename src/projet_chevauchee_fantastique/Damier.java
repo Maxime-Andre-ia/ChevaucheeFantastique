@@ -6,7 +6,7 @@ package projet_chevauchee_fantastique;
 
 /**
  *
- * @author quent
+ * @author quent    
  */
 public class Damier {
     private Case[][] grille;
