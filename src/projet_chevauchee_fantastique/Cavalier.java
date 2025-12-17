@@ -12,6 +12,10 @@ public class Cavalier {
    private int X;
    private int Y;
    
+   public Cavalier(int xdepart, int ydepart){
+   this.X= xdepart;
+   this.Y= ydepart;}
    
+ 
    }
 
