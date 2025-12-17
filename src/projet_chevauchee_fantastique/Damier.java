@@ -8,25 +8,27 @@ package projet_chevauchee_fantastique;
  *
  * @author quent    
  */
+
 public class Damier {
     private Case[][] grille;
-    private final int TAILLE = 5;    
-    public Damier() {
-        this.grille = new Case[TAILLE][TAILLE];
-        initialiserNiveau1();
-    }
-    
-    private void initialiserNiveau1() {
+    private final int TAILLE = 5; 
 
+    
+    public Damier() {
+    this.grille = new Case[TAILLE][TAILLE];
+    initialiserNiveau1();
+    }
+
+
+    private void initialiserNiveau1() {
         boolean[][] configInitiale = {
             {false, true, false, true, false}, 
             {true, false, false, false, true}, 
             {false, false, false, false, false}, 
             {true, false, false, false, true}, 
-            {false, true, false, true, false}  
+            {false, true, false, true, false} 
         };
 
-        
         for (int i = 0; i < TAILLE; i++) {
             for (int j = 0; j < TAILLE; j++) {
                 boolean etat = configInitiale[i][j];
@@ -35,7 +37,7 @@ public class Damier {
         }
     }
 
- 
+   
     public Case getCase(int x, int y) {
         if (x >= 0 && x < TAILLE && y >= 0 && y < TAILLE) {
             return grille[x][y];
@@ -43,19 +45,19 @@ public class Damier {
         return null;
     }
 
-    
+   
     public boolean estNiveauTermine() {
-        
-        for (int i = 0; i < TAILLE; i++) {
+           for (int i = 0; i < TAILLE; i++) {
             for (int j = 0; j < TAILLE; j++) {
                 if (grille[i][j].estAllumee()) {
                     return false; 
                 }
             }
         }
-        
         return true;
-    } 
+    }
+
+   
     public int getTaille() {
         return TAILLE;
     }
