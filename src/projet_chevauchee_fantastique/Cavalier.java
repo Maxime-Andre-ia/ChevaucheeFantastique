@@ -16,6 +16,26 @@ public class Cavalier {
    this.X= xdepart;
    this.Y= ydepart;}
    
- 
+   public void deplacer(int nvX, int nvY){
+   this.X=nvX;
+   this.Y=nvY;}
+   
+   public int getX(){
+   return X;}
+   
+   public int getY(){
+   return Y;}
+   
+   
+   public boolean peutAllerEn(int cibleX, int cibleY) {
+    int diffX = cibleX - this.X;
+    int diffY = cibleY - this.Y;
+    if (diffX < 0) diffX = -diffX;
+    if (diffY < 0) diffY = -diffY;
+    if ((diffX == 2 && diffY == 1) || (diffX == 1 && diffY == 2)) {
+        return true;
+    }
+    return false;
+}
    }
 
