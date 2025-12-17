@@ -13,8 +13,8 @@ package projet_chevauchee_fantastique;
  * Contient ses coordonnées et son état (allumée ou éteinte).
  */
 public class Case {
-    private int x; 
-    private int y;
+    private final int x; 
+    private final int y;
     private boolean estAllumee;
     
     public Case(int x, int y, boolean estAllumee) {

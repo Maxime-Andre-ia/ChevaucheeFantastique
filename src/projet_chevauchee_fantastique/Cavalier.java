@@ -32,10 +32,7 @@ public class Cavalier {
     int diffY = cibleY - this.Y;
     if (diffX < 0) diffX = -diffX;
     if (diffY < 0) diffY = -diffY;
-    if ((diffX == 2 && diffY == 1) || (diffX == 1 && diffY == 2)) {
-        return true;
-    }
-    return false;
+    return (diffX == 2 && diffY == 1) || (diffX == 1 && diffY == 2);
 }
    }
 

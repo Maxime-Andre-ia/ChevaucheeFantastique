@@ -10,7 +10,7 @@ package projet_chevauchee_fantastique;
  */
 
 public class Damier {
-    private Case[][] grille;
+    private final Case[][] grille;
     private final int TAILLE = 5; 
 
     
