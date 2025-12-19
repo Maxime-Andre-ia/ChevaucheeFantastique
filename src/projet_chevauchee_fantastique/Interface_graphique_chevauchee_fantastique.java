@@ -14,6 +14,7 @@ import javax.swing.JButton;
  * @author mathi
  */
 public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFrame {
+private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interface_graphique_chevauchee_fantastique.class.getName());
 
     /**
      * Creates new form Interface_graphique_chevauchee_fantastique
