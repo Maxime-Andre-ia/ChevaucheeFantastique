@@ -4,20 +4,92 @@
  */
 package projet_chevauchee_fantastique;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import javax.swing.JButton;
+
 /**
  *
  * @author mathi
  */
 public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interface_graphique_chevauchee_fantastique.class.getName());
 
     /**
      * Creates new form Interface_graphique_chevauchee_fantastique
      */
+    private final Jeu jeu;
+    private final JButton[][] grilleBoutons;
+
     public Interface_graphique_chevauchee_fantastique() {
+        // Initialisation de tes objets
+        this.jeu = new Jeu();
+        this.grilleBoutons = new JButton[5][5];
         initComponents();
+
+        this.setTitle("La Chevauchée Fantastique");
+        this.setSize(600, 600);
+        this.getContentPane().setLayout(new GridLayout(5, 5));
+
+        initialiserPlateau();
     }
+
+    private void initialiserPlateau() {
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            JButton btn = new JButton();
+            this.grilleBoutons[i][j] = btn;
+
+            // Variables finales pour le clic (obligatoire en Java dans une boucle)
+            final int x = i;
+            final int y = j;
+
+            // --- ÉTAPE 10 : GESTION DES CLICS ---
+            btn.addActionListener(e -> {
+                // 1. On appelle la logique de la Phase 1
+                this.jeu.tenterUnCoup(x, y); 
+                
+                // 2. On met à jour le visuel pour voir le changement
+                actualiserAffichage(); 
+            });
+
+            this.getContentPane().add(btn);
+        }
+    }
+    // Premier affichage au démarrage
+    actualiserAffichage();
+}
+
+/**
+ * ÉTAPE 11 : Feedback Visuel
+ * Cette méthode redessine le plateau sans recréer les boutons.
+ */
+public void actualiserAffichage() {
+    Damier damier = this.jeu.getDamier();
+    Cavalier cavalier = this.jeu.getCavalier();
+
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            JButton btn = this.grilleBoutons[i][j];
+            Case laCase = damier.getCase(i, j);
+
+            // Mise à jour des couleurs (Allumé = Rouge, Éteint = Gris)
+            if (laCase != null && laCase.estAllumee()) {
+                btn.setBackground(java.awt.Color.RED);
+            } else {
+                btn.setBackground(java.awt.Color.DARK_GRAY);
+            }
+
+            if (cavalier.getX() == i && cavalier.getY() == j) {
+                btn.setText("C");
+                btn.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
+                btn.setForeground(java.awt.Color.WHITE); // Pour mieux voir sur le gris
+            } else {
+                btn.setText(""); 
+            }
+        }
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
