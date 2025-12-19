@@ -8,89 +8,108 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 /**
  *
  * @author mathi
  */
 public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFrame {
-private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interface_graphique_chevauchee_fantastique.class.getName());
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interface_graphique_chevauchee_fantastique.class.getName());
 
     /**
      * Creates new form Interface_graphique_chevauchee_fantastique
      */
     private final Jeu jeu;
     private final JButton[][] grilleBoutons;
+    private final javax.swing.JLabel labelEtat;
 
     public Interface_graphique_chevauchee_fantastique() {
-        // Initialisation de tes objets
-        this.jeu = new Jeu();
-        this.grilleBoutons = new JButton[5][5];
         initComponents();
+        this.jeu = new Jeu();
+        this.grilleBoutons = new javax.swing.JButton[5][5];
 
         this.setTitle("La Chevauchée Fantastique");
-        this.setSize(600, 600);
-        this.getContentPane().setLayout(new GridLayout(5, 5));
+        this.setSize(600, 650);
 
-        initialiserPlateau();
+        // On définit la disposition globale (Etape 7 enrichie)
+        this.getContentPane().setLayout(new java.awt.BorderLayout());
+
+        // --- ÉTAPE 12 : CRÉATION DU LABEL D'ÉTAT ---
+        labelEtat = new javax.swing.JLabel("Bonne chance !", javax.swing.SwingConstants.CENTER);
+        labelEtat.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
+        this.getContentPane().add(labelEtat, java.awt.BorderLayout.SOUTH); // Placé en bas
+
+        // Création du panneau pour la grille (Etape 7)
+        javax.swing.JPanel panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
+        this.getContentPane().add(panneauGrille, java.awt.BorderLayout.CENTER); // Au centre
+
+        initialiserPlateau(panneauGrille);
     }
 
-    private void initialiserPlateau() {
-    for (int i = 0; i < 5; i++) {
+   private void initialiserPlateau(JPanel panneauGrille) { 
+            for (int i = 0; i < 5; i++) {
         for (int j = 0; j < 5; j++) {
             JButton btn = new JButton();
             this.grilleBoutons[i][j] = btn;
 
-            // Variables finales pour le clic (obligatoire en Java dans une boucle)
             final int x = i;
             final int y = j;
 
-            // --- ÉTAPE 10 : GESTION DES CLICS ---
             btn.addActionListener(e -> {
-                // 1. On appelle la logique de la Phase 1
-                this.jeu.tenterUnCoup(x, y); 
-                
-                // 2. On met à jour le visuel pour voir le changement
-                actualiserAffichage(); 
+                this.jeu.tenterUnCoup(x, y);
+                actualiserAffichage();
             });
 
-            this.getContentPane().add(btn);
+            // On ajoute le bouton au PANNEAU passé en paramètre
+            panneauGrille.add(btn); 
         }
     }
-    // Premier affichage au démarrage
     actualiserAffichage();
 }
 
-/**
- * ÉTAPE 11 : Feedback Visuel
- * Cette méthode redessine le plateau sans recréer les boutons.
- */
-public void actualiserAffichage() {
-    Damier damier = this.jeu.getDamier();
-    Cavalier cavalier = this.jeu.getCavalier();
+    /**
+     * ÉTAPE 11 : Feedback Visuel Cette méthode redessine le plateau sans
+     * recréer les boutons.
+     */
+    public void actualiserAffichage() {
+        Damier damier = this.jeu.getDamier();
+        Cavalier cavalier = this.jeu.getCavalier();
 
-    for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
-            JButton btn = this.grilleBoutons[i][j];
-            Case laCase = damier.getCase(i, j);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                JButton btn = this.grilleBoutons[i][j];
+                Case laCase = damier.getCase(i, j);
 
-            // Mise à jour des couleurs (Allumé = Rouge, Éteint = Gris)
-            if (laCase != null && laCase.estAllumee()) {
-                btn.setBackground(java.awt.Color.RED);
-            } else {
-                btn.setBackground(java.awt.Color.DARK_GRAY);
-            }
+                if (laCase != null && laCase.estAllumee()) {
+                    btn.setBackground(java.awt.Color.RED);
+                } else {
+                    btn.setBackground(java.awt.Color.DARK_GRAY);
+                }
 
-            if (cavalier.getX() == i && cavalier.getY() == j) {
-                btn.setText("C");
-                btn.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
-                btn.setForeground(java.awt.Color.WHITE); // Pour mieux voir sur le gris
-            } else {
-                btn.setText(""); 
+                if (cavalier.getX() == i && cavalier.getY() == j) {
+                    btn.setText("C");
+                    btn.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
+                    btn.setForeground(java.awt.Color.WHITE);
+                } else {
+                    btn.setText("");
+                }
             }
         }
+
+        if (jeu.getDamier().estNiveauTermine()) {
+            labelEtat.setText("NIVEAU TERMINÉ ! BRAVO !");
+            labelEtat.setForeground(java.awt.Color.GREEN);
+        } else if (jeu.estBloque()) {
+            labelEtat.setText("PARTIE PERDUE : VOUS ÊTES COINCÉ !");
+            labelEtat.setForeground(java.awt.Color.RED);
+        } else {
+            labelEtat.setText("Partie en cours...");
+            labelEtat.setForeground(java.awt.Color.BLACK);
+        }
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -141,6 +160,8 @@ public void actualiserAffichage() {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Interface_graphique_chevauchee_fantastique().setVisible(true));
     }
+
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
