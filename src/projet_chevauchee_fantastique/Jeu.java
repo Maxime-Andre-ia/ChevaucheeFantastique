@@ -63,4 +63,12 @@ public class Jeu {
         }
         return true;
     }
+
+    public Damier getDamier() {
+    return this.damier; // On renvoie l'objet damier au lieu de l'erreur
+}
+
+public Cavalier getCavalier() {
+    return this.cavalier; // On renvoie l'objet cavalier au lieu de l'erreur
+}
 }
