@@ -10,12 +10,27 @@ package projet_chevauchee_fantastique;
  */
 public class Jeu {
 
-    private final Damier damier;
-    private final Cavalier cavalier;
+    private Damier damier;
+    private Cavalier cavalier;
+    private int niveauActuel=1;
 
     public Jeu() {
-        this.damier = new Damier();
-        this.cavalier = new Cavalier(2, 2);
+        chargerNiveau(1);
+    }
+    
+    public void chargerNiveau(int n) {
+        this.niveauActuel = n;
+        if (n == 1) {
+            this.damier = new Damier(5, 1);
+            this.cavalier = new Cavalier(2, 2);
+        } else if (n == 2) {
+            this.damier = new Damier(8, 2); // Grille plus grande
+            this.cavalier = new Cavalier(0, 0); // Nouveau départ
+        }
+    }
+    
+    public int getNiveauActuel() {
+        return niveauActuel;
     }
 
     public void tenterUnCoup(int xClique, int yClique) {
