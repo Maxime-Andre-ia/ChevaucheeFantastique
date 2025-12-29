@@ -15,8 +15,8 @@ public class MainConsol {
         Scanner scanner = new Scanner(System.in);
 
         
-        Damier damier = new Damier();
-        Cavalier cavalier = new Cavalier(0, 0);
+        Damier damier = new Damier(5,1);
+        Cavalier cavalier = new Cavalier(2, 2);
 
         
         if (damier.getCase(cavalier.getX(), cavalier.getY()).estAllumee()) {

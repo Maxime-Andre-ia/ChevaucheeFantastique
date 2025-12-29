@@ -48,8 +48,8 @@ public class Damier {
     }
     private void initialiserNiveau2() {
         
-        for (int i = 0; i < TAILLE; i++) {
-            for (int j = 0; j < TAILLE; j++) {
+        for (int i = 0; i < this.TAILLE; i++) {
+            for (int j = 0; j < this.TAILLE; j++) {
                 
                 boolean estBord = (i == 0 || i == TAILLE - 1 || j == 0 || j == TAILLE - 1);
                 this.grille[i][j] = new Case(i, j, estBord);
