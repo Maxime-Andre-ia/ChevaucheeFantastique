@@ -27,6 +27,7 @@ public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFra
     private JButton[][] grilleBoutons;
     private final javax.swing.JLabel labelEtat;
     private javax.swing.JPanel panneauGrille;
+    private final javax.swing.JButton btnRecommencer;
 
     public Interface_graphique_chevauchee_fantastique() {
         initComponents();
@@ -43,34 +44,66 @@ public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFra
         labelEtat = new javax.swing.JLabel("Bonne chance !", javax.swing.SwingConstants.CENTER);
         labelEtat.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         this.getContentPane().add(labelEtat, java.awt.BorderLayout.SOUTH); // Placé en bas
+        
+        btnRecommencer = new javax.swing.JButton("Recommencer le niveau");
+btnRecommencer.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+
+// Action du bouton : on recharge le niveau actuel
+btnRecommencer.addActionListener(e -> {
+    jeu.chargerNiveau(jeu.getNiveauActuel()); // Recharge le même niveau dans le moteur
+    reinitialiserInterface(); // Rafraîchit la vue
+});
+
+// On le place en haut de la fenêtre
+this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
 
         // Création du panneau pour la grille (Etape 7)
-        javax.swing.JPanel panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
+         this.panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
         this.getContentPane().add(panneauGrille, java.awt.BorderLayout.CENTER); // Au centre
 
         initialiserPlateau(panneauGrille);
     }
 
-   private void initialiserPlateau(JPanel panneauGrille) { 
-            for (int i = 0; i < 5; i++) {
-        for (int j = 0; j < 5; j++) {
+   private void initialiserPlateau(JPanel panneauGrille) {
+    int taille = jeu.getDamier().getTaille(); // Utilise bien la taille dynamique !
+    for (int i = 0; i < taille; i++) { // Lignes
+        for (int j = 0; j < taille; j++) { // Colonnes
             JButton btn = new JButton();
-            this.grilleBoutons[i][j] = btn;
+            this.grilleBoutons[i][j] = btn; // i = x, j = y
 
             final int x = i;
             final int y = j;
 
             btn.addActionListener(e -> {
-                this.jeu.tenterUnCoup(x, y);
+                this.jeu.tenterUnCoup(x, y); // x et y doivent correspondre à la grille
                 actualiserAffichage();
             });
-
-            // On ajoute le bouton au PANNEAU passé en paramètre
-            panneauGrille.add(btn); 
+            panneauGrille.add(btn);
         }
     }
-    actualiserAffichage();
 }
+   
+   private void reinitialiserInterface() {
+    // 1. On vide le panneau
+    panneauGrille.removeAll();
+
+    // 2. On récupère la taille actuelle (5 ou 8)
+    int taille = jeu.getDamier().getTaille();
+    panneauGrille.setLayout(new java.awt.GridLayout(taille, taille));
+
+    // 3. On recrée le tableau de boutons
+    this.grilleBoutons = new javax.swing.JButton[taille][taille];
+
+    // 4. On relance la création des boutons et l'affichage
+    initialiserPlateau(panneauGrille);
+    
+    panneauGrille.revalidate();
+    panneauGrille.repaint();
+    
+    labelEtat.setText("Niveau " + jeu.getNiveauActuel() + " - Recommencé");
+    labelEtat.setForeground(java.awt.Color.BLACK);
+}
+   
    private void passerAuNiveauSuivant() {
     // 1. On passe au niveau 2 dans le moteur de jeu
     int niveauSuivant = jeu.getNiveauActuel() + 1;
