@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  *
@@ -23,8 +24,9 @@ public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFra
      * Creates new form Interface_graphique_chevauchee_fantastique
      */
     private final Jeu jeu;
-    private final JButton[][] grilleBoutons;
+    private JButton[][] grilleBoutons;
     private final javax.swing.JLabel labelEtat;
+    private javax.swing.JPanel panneauGrille;
 
     public Interface_graphique_chevauchee_fantastique() {
         initComponents();
@@ -69,6 +71,35 @@ public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFra
     }
     actualiserAffichage();
 }
+   private void passerAuNiveauSuivant() {
+    // 1. On passe au niveau 2 dans le moteur de jeu
+    int niveauSuivant = jeu.getNiveauActuel() + 1;
+    jeu.chargerNiveau(niveauSuivant); 
+
+    // 2. On vide visuellement le panneau actuel (enlève les 25 boutons du niv 1)
+    if (panneauGrille != null) {
+        panneauGrille.removeAll(); 
+    }
+
+    // 3. On récupère la nouvelle taille (ex: 8)
+    int nouvelleTaille = jeu.getDamier().getTaille();
+
+    // 4. On change la grille visuelle pour accepter 8x8 boutons
+    panneauGrille.setLayout(new java.awt.GridLayout(nouvelleTaille, nouvelleTaille));
+
+    // 5. On recrée le tableau de stockage des boutons à la bonne taille
+    this.grilleBoutons = new javax.swing.JButton[nouvelleTaille][nouvelleTaille];
+
+    // 6. On recrée les nouveaux boutons et on les ajoute au panneau
+    initialiserPlateau(panneauGrille);
+
+    // 7. On rafraîchit l'interface pour afficher les changements
+    panneauGrille.revalidate();
+    panneauGrille.repaint();
+    
+    // 8. On met à jour le texte
+    labelEtat.setText("Niveau " + niveauSuivant + " : Bonne chance !");
+}
 
     /**
      * ÉTAPE 11 : Feedback Visuel Cette méthode redessine le plateau sans
@@ -102,6 +133,9 @@ public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFra
         if (jeu.getDamier().estNiveauTermine()) {
             labelEtat.setText("NIVEAU TERMINÉ ! BRAVO !");
             labelEtat.setForeground(java.awt.Color.GREEN);
+            Timer timer = new Timer(2000, e -> passerAuNiveauSuivant());
+    timer.setRepeats(false);
+    timer.start();
         } else if (jeu.estBloque()) {
             labelEtat.setText("PARTIE PERDUE : VOUS ÊTES COINCÉ !");
             labelEtat.setForeground(java.awt.Color.RED);
