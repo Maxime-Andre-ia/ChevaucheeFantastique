@@ -11,12 +11,22 @@ package projet_chevauchee_fantastique;
 
 public class Damier {
     private final Case[][] grille;
-    private final int TAILLE = 5; 
+    private final int TAILLE; 
 
     
-    public Damier() {
+    public Damier(int TAILLE,int niveau) {
+    this.TAILLE = TAILLE;
     this.grille = new Case[TAILLE][TAILLE];
+    
+    if (niveau==1){
     initialiserNiveau1();
+    }else if (niveau==2){
+        initialiserNiveau2();
+        }
+    }
+
+    Damier(int i) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 
@@ -33,6 +43,16 @@ public class Damier {
             for (int j = 0; j < TAILLE; j++) {
                 boolean etat = configInitiale[i][j];
                 this.grille[i][j] = new Case(i, j, etat);
+            }
+        }
+    }
+    private void initialiserNiveau2() {
+        
+        for (int i = 0; i < TAILLE; i++) {
+            for (int j = 0; j < TAILLE; j++) {
+                
+                boolean estBord = (i == 0 || i == TAILLE - 1 || j == 0 || j == TAILLE - 1);
+                this.grille[i][j] = new Case(i, j, estBord);
             }
         }
     }
