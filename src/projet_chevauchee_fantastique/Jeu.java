@@ -24,7 +24,7 @@ public class Jeu {
             Case laCase = damier.getCase(xClique, yClique);
 
             // On vérifie si la case est jouable
-            if (laCase != null && laCase.estAllumee()) {
+            if (laCase != null && laCase.estAccessible()) {
 
                 cavalier.deplacer(xClique, yClique);
                 laCase.eteindre();
@@ -47,21 +47,22 @@ public class Jeu {
 
     public boolean estBloque() {
         int[][] sauts = {
-            {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
-            {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
-        };
+        {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+        {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+    };
 
-        for (int i = 0; i < 8; i++) {
-            int cibleX = cavalier.getX() + sauts[i][0];
-            int cibleY = cavalier.getY() + sauts[i][1];
+    for (int i = 0; i < 8; i++) {
+        int cibleX = cavalier.getX() + sauts[i][0];
+        int cibleY = cavalier.getY() + sauts[i][1];
 
-            Case laCase = damier.getCase(cibleX, cibleY);
+        Case laCase = damier.getCase(cibleX, cibleY);
 
-            if (laCase != null && laCase.estAllumee()) {
-                return false;
-            }
+        // Si la case existe et qu'elle est soit NEUTRE, soit ALLUMÉE
+        if (laCase != null && laCase.estAccessible()) {
+            return false; // Il y a encore un chemin possible !
         }
-        return true;
+    }
+    return true; // Vraiment coincé
     }
 
     public Damier getDamier() {
