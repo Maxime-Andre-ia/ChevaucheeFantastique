@@ -26,7 +26,8 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     private final Jeu jeu;
     private JButton[][] grilleBoutons;
     private final javax.swing.JLabel labelEtat;
-    private javax.swing.JPanel panneauGrille;
+    private javax.swing.JLabel labelCoups;
+    private final javax.swing.JPanel panneauGrille;
     private final javax.swing.JButton btnRecommencer;
 
     public Interface_graphique_chevauchee_fantastique() {
@@ -45,15 +46,24 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
         labelEtat.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         this.getContentPane().add(labelEtat, java.awt.BorderLayout.SOUTH); // Placé en bas
 
+        JPanel panneauHaut = new JPanel(new java.awt.GridLayout(2, 1));
+
+// 2. On configure le bouton et on l'ajoute au panneauHaut
         btnRecommencer = new javax.swing.JButton("Recommencer le niveau");
         btnRecommencer.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
-
         btnRecommencer.addActionListener(e -> {
-            jeu.chargerNiveau(jeu.getNiveauActuel()); // Recharge le même niveau dans le moteur
-            reinitialiserInterface(); // Rafraîchit la vue
+            jeu.chargerNiveau(jeu.getNiveauActuel());
+            reinitialiserInterface();
         });
+        panneauHaut.add(btnRecommencer); // Ajout au petit panneau
 
-        this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
+// 3. On crée le label des coups et on l'ajoute au panneauHaut
+        labelCoups = new javax.swing.JLabel("Nombre de coups : 0", javax.swing.SwingConstants.CENTER);
+        labelCoups.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
+        panneauHaut.add(labelCoups); // Ajout au petit panneau
+
+// 4. On place le tout en haut de la fenêtre principale
+        this.getContentPane().add(panneauHaut, java.awt.BorderLayout.NORTH);
 
         this.panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
         this.getContentPane().add(panneauGrille, java.awt.BorderLayout.CENTER); // Au centre
@@ -159,6 +169,7 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
                 } else {
                     btn.setText("");
                 }
+                labelCoups.setText("Nombre de coups : " + jeu.getNbCoups());
             }
         }
 
