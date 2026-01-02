@@ -25,7 +25,7 @@ public class Jeu {
             this.cavalier = new Cavalier(2, 2);
         } else if (n == 2) {
             this.damier = new Damier(8, 2); // Grille plus grande
-            this.cavalier = new Cavalier(0, 0); // Nouveau départ
+            this.cavalier = new Cavalier(3, 3);
         }
     }
     

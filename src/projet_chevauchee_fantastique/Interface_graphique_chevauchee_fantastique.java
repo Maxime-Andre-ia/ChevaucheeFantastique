@@ -16,7 +16,7 @@ import javax.swing.Timer;
  *
  * @author mathi
  */
-public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFrame {
+public final class Interface_graphique_chevauchee_fantastique extends javax.swing.JFrame {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Interface_graphique_chevauchee_fantastique.class.getName());
 
@@ -44,95 +44,93 @@ public class Interface_graphique_chevauchee_fantastique extends javax.swing.JFra
         labelEtat = new javax.swing.JLabel("Bonne chance !", javax.swing.SwingConstants.CENTER);
         labelEtat.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         this.getContentPane().add(labelEtat, java.awt.BorderLayout.SOUTH); // Placé en bas
-        
+
         btnRecommencer = new javax.swing.JButton("Recommencer le niveau");
-btnRecommencer.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
+        btnRecommencer.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
 
-// Action du bouton : on recharge le niveau actuel
-btnRecommencer.addActionListener(e -> {
-    jeu.chargerNiveau(jeu.getNiveauActuel()); // Recharge le même niveau dans le moteur
-    reinitialiserInterface(); // Rafraîchit la vue
-});
+        btnRecommencer.addActionListener(e -> {
+            jeu.chargerNiveau(jeu.getNiveauActuel()); // Recharge le même niveau dans le moteur
+            reinitialiserInterface(); // Rafraîchit la vue
+        });
 
-// On le place en haut de la fenêtre
-this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
+        this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
 
-        // Création du panneau pour la grille (Etape 7)
-         this.panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
+        this.panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
         this.getContentPane().add(panneauGrille, java.awt.BorderLayout.CENTER); // Au centre
 
         initialiserPlateau(panneauGrille);
+        actualiserAffichage();
     }
 
-   private void initialiserPlateau(JPanel panneauGrille) {
-    int taille = jeu.getDamier().getTaille(); // Utilise bien la taille dynamique !
-    for (int i = 0; i < taille; i++) { // Lignes
-        for (int j = 0; j < taille; j++) { // Colonnes
-            JButton btn = new JButton();
-            this.grilleBoutons[i][j] = btn; // i = x, j = y
+    private void initialiserPlateau(JPanel panneauGrille) {
+        int taille = jeu.getDamier().getTaille(); // Utilise bien la taille dynamique !
+        for (int i = 0; i < taille; i++) { // Lignes
+            for (int j = 0; j < taille; j++) { // Colonnes
+                JButton btn = new JButton();
+                this.grilleBoutons[i][j] = btn; // i = x, j = y
 
-            final int x = i;
-            final int y = j;
+                final int x = i;
+                final int y = j;
 
-            btn.addActionListener(e -> {
-                this.jeu.tenterUnCoup(x, y); // x et y doivent correspondre à la grille
-                actualiserAffichage();
-            });
-            panneauGrille.add(btn);
+                btn.addActionListener(e -> {
+                    this.jeu.tenterUnCoup(x, y); // x et y doivent correspondre à la grille
+                    actualiserAffichage();
+                });
+                panneauGrille.add(btn);
+            }
         }
     }
-}
-   
-   private void reinitialiserInterface() {
-    // 1. On vide le panneau
-    panneauGrille.removeAll();
 
-    // 2. On récupère la taille actuelle (5 ou 8)
-    int taille = jeu.getDamier().getTaille();
-    panneauGrille.setLayout(new java.awt.GridLayout(taille, taille));
+    private void reinitialiserInterface() {
+        // 1. On vide le panneau
+        panneauGrille.removeAll();
 
-    // 3. On recrée le tableau de boutons
-    this.grilleBoutons = new javax.swing.JButton[taille][taille];
+        // 2. On récupère la taille actuelle (5 ou 8)
+        int taille = jeu.getDamier().getTaille();
+        panneauGrille.setLayout(new java.awt.GridLayout(taille, taille));
 
-    // 4. On relance la création des boutons et l'affichage
-    initialiserPlateau(panneauGrille);
-    
-    panneauGrille.revalidate();
-    panneauGrille.repaint();
-    
-    labelEtat.setText("Niveau " + jeu.getNiveauActuel() + " - Recommencé");
-    labelEtat.setForeground(java.awt.Color.BLACK);
-}
-   
-   private void passerAuNiveauSuivant() {
-    // 1. On passe au niveau 2 dans le moteur de jeu
-    int niveauSuivant = jeu.getNiveauActuel() + 1;
-    jeu.chargerNiveau(niveauSuivant); 
+        // 3. On recrée le tableau de boutons
+        this.grilleBoutons = new javax.swing.JButton[taille][taille];
 
-    // 2. On vide visuellement le panneau actuel (enlève les 25 boutons du niv 1)
-    if (panneauGrille != null) {
-        panneauGrille.removeAll(); 
+        // 4. On relance la création des boutons et l'affichage
+        initialiserPlateau(panneauGrille);
+
+        panneauGrille.revalidate();
+        panneauGrille.repaint();
+
+        labelEtat.setText("Niveau " + jeu.getNiveauActuel() + " - Recommencé");
+        labelEtat.setForeground(java.awt.Color.BLACK);
     }
 
-    // 3. On récupère la nouvelle taille (ex: 8)
-    int nouvelleTaille = jeu.getDamier().getTaille();
+    private void passerAuNiveauSuivant() {
+        // 1. On passe au niveau 2 dans le moteur de jeu
+        int niveauSuivant = jeu.getNiveauActuel() + 1;
+        jeu.chargerNiveau(niveauSuivant);
 
-    // 4. On change la grille visuelle pour accepter 8x8 boutons
-    panneauGrille.setLayout(new java.awt.GridLayout(nouvelleTaille, nouvelleTaille));
+        // 2. On vide visuellement le panneau actuel (enlève les 25 boutons du niv 1)
+        if (panneauGrille != null) {
+            panneauGrille.removeAll();
+        }
 
-    // 5. On recrée le tableau de stockage des boutons à la bonne taille
-    this.grilleBoutons = new javax.swing.JButton[nouvelleTaille][nouvelleTaille];
+        // 3. On récupère la nouvelle taille (ex: 8)
+        int nouvelleTaille = jeu.getDamier().getTaille();
 
-    // 6. On recrée les nouveaux boutons et on les ajoute au panneau
-    initialiserPlateau(panneauGrille);
+        // 4. On change la grille visuelle pour accepter 8x8 boutons
+        panneauGrille.setLayout(new java.awt.GridLayout(nouvelleTaille, nouvelleTaille));
 
-    // 7. On rafraîchit l'interface pour afficher les changements
-    panneauGrille.revalidate();
-    panneauGrille.repaint();
-    
-    // 8. On met à jour le texte
-    labelEtat.setText("Niveau " + niveauSuivant + " : Bonne chance !");
-}
+        // 5. On recrée le tableau de stockage des boutons à la bonne taille
+        this.grilleBoutons = new javax.swing.JButton[nouvelleTaille][nouvelleTaille];
+
+        // 6. On recrée les nouveaux boutons et on les ajoute au panneau
+        initialiserPlateau(panneauGrille);
+
+        // 7. On rafraîchit l'interface pour afficher les changements
+        panneauGrille.revalidate();
+        panneauGrille.repaint();
+        actualiserAffichage();
+        // 8. On met à jour le texte
+        labelEtat.setText("Niveau " + niveauSuivant + " : Bonne chance !");
+    }
 
     /**
      * ÉTAPE 11 : Feedback Visuel Cette méthode redessine le plateau sans
@@ -141,9 +139,10 @@ this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
     public void actualiserAffichage() {
         Damier damier = this.jeu.getDamier();
         Cavalier cavalier = this.jeu.getCavalier();
+        int taille = damier.getTaille(); // On récupère la vraie taille (5 ou 8)
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
+        for (int i = 0; i < taille; i++) { // Remplacé 5 par taille
+            for (int j = 0; j < taille; j++) { // Remplacé 5 par taille
                 JButton btn = this.grilleBoutons[i][j];
                 Case laCase = damier.getCase(i, j);
 
@@ -167,8 +166,8 @@ this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
             labelEtat.setText("NIVEAU TERMINÉ ! BRAVO !");
             labelEtat.setForeground(java.awt.Color.GREEN);
             Timer timer = new Timer(2000, e -> passerAuNiveauSuivant());
-    timer.setRepeats(false);
-    timer.start();
+            timer.setRepeats(false);
+            timer.start();
         } else if (jeu.estBloque()) {
             labelEtat.setText("PARTIE PERDUE : VOUS ÊTES COINCÉ !");
             labelEtat.setForeground(java.awt.Color.RED);
@@ -177,8 +176,6 @@ this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
             labelEtat.setForeground(java.awt.Color.BLACK);
         }
     }
-
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -219,7 +216,6 @@ this.getContentPane().add(btnRecommencer, java.awt.BorderLayout.NORTH);
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Interface_graphique_chevauchee_fantastique().setVisible(true));
     }
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
