@@ -29,6 +29,23 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     private javax.swing.JLabel labelCoups;
     private final javax.swing.JPanel panneauGrille;
     private final javax.swing.JButton btnRecommencer;
+    
+    private void afficherRegles() {
+    String message = """
+                     \u2728 BIENVENUE DANS LA CHEVAUCH\u00c9E FANTASTIQUE \u2728
+                     
+                     Votre mission : \u00c9teindre toutes les cases ROUGES du damier.
+                     
+                     \ud83d\udd79\ufe0f R\u00c8GLES DU JEU :
+                     1. Le Cavalier (\u265e) se d\u00e9place uniquement en 'L' (2 cases puis 1).
+                     2. Cliquez sur une case pour vous y d\u00e9placer.
+                     3. Une fois \u00e9teinte, une case devient BLEUE.
+                     
+                     Saurez-vous terminer le Niveau 2 avec le moins de coups possible ?
+                     Bon courage ! """;
+
+    javax.swing.JOptionPane.showMessageDialog(this, message, "Règles du Jeu", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+}
 
     public Interface_graphique_chevauchee_fantastique() {
         initComponents();
@@ -57,12 +74,10 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
         });
         panneauHaut.add(btnRecommencer); // Ajout au petit panneau
 
-// 3. On crée le label des coups et on l'ajoute au panneauHaut
         labelCoups = new javax.swing.JLabel("Nombre de coups : 0", javax.swing.SwingConstants.CENTER);
         labelCoups.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
-        panneauHaut.add(labelCoups); // Ajout au petit panneau
+        panneauHaut.add(labelCoups);
 
-// 4. On place le tout en haut de la fenêtre principale
         this.getContentPane().add(panneauHaut, java.awt.BorderLayout.NORTH);
 
         this.panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
@@ -70,6 +85,7 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
 
         initialiserPlateau(panneauGrille);
         actualiserAffichage();
+        java.awt.EventQueue.invokeLater(() -> afficherRegles());
     }
 
     private void initialiserPlateau(JPanel panneauGrille) {
@@ -149,42 +165,57 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     public void actualiserAffichage() {
         Damier damier = this.jeu.getDamier();
         Cavalier cavalier = this.jeu.getCavalier();
-        int taille = damier.getTaille(); // On récupère la vraie taille (5 ou 8)
+        int taille = damier.getTaille();
 
-        for (int i = 0; i < taille; i++) { // Remplacé 5 par taille
-            for (int j = 0; j < taille; j++) { // Remplacé 5 par taille
+        // --- 1. DÉFINITION DES COULEURS MODERNES ---
+        Color rougeCorail = new Color(231, 76, 60);    // Cases à éteindre
+// Cases à éteindre
+        Color bleuNuit = new Color(44, 62, 80);
+        // Optionnel : pour les bordures
+         // Cases vides / fond
+
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
                 JButton btn = this.grilleBoutons[i][j];
                 Case laCase = damier.getCase(i, j);
 
+                // Désactiver l'effet de focus bleu moche de Windows sur les boutons
+                btn.setFocusPainted(false);
+                btn.setBorder(javax.swing.BorderFactory.createLineBorder(bleuNuit, 1));
+
+                // --- 2. GESTION DES COULEURS DE FOND ---
                 if (laCase != null && laCase.estAllumee()) {
-                    btn.setBackground(java.awt.Color.RED);
+                    btn.setBackground(rougeCorail);
                 } else {
-                    btn.setBackground(java.awt.Color.DARK_GRAY);
+                    btn.setBackground(bleuNuit);
                 }
 
                 if (cavalier.getX() == i && cavalier.getY() == j) {
-                    btn.setText("C");
-                    btn.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 40));
-                    btn.setForeground(java.awt.Color.WHITE);
+                    btn.setText("♞"); 
+                    btn.setFont(new java.awt.Font("Segoe UI Symbol", java.awt.Font.BOLD, 50));
+                    btn.setForeground(Color.WHITE);
                 } else {
                     btn.setText("");
                 }
-                labelCoups.setText("Nombre de coups : " + jeu.getNbCoups());
             }
         }
 
+        // --- 5. MISE À JOUR DES LABELS ---
+        labelCoups.setText("Nombre de coups : " + jeu.getNbCoups());
+
         if (jeu.getDamier().estNiveauTermine()) {
-            labelEtat.setText("NIVEAU TERMINÉ ! BRAVO !");
-            labelEtat.setForeground(java.awt.Color.GREEN);
+            labelEtat.setText("✨ NIVEAU TERMINÉ ! ✨");
+            labelEtat.setForeground(new Color(46, 204, 113)); // Vert Émeraude
+
             Timer timer = new Timer(2000, e -> passerAuNiveauSuivant());
             timer.setRepeats(false);
             timer.start();
         } else if (jeu.estBloque()) {
-            labelEtat.setText("PARTIE PERDUE : VOUS ÊTES COINCÉ !");
-            labelEtat.setForeground(java.awt.Color.RED);
+            labelEtat.setText("❌ COINCÉ ! ESSAYEZ ENCORE...");
+            labelEtat.setForeground(rougeCorail);
         } else {
-            labelEtat.setText("Partie en cours...");
-            labelEtat.setForeground(java.awt.Color.BLACK);
+            labelEtat.setText("Niveau " + jeu.getNiveauActuel() + " en cours...");
+            labelEtat.setForeground(Color.BLACK);
         }
     }
 
