@@ -76,20 +76,20 @@ public final class Jeu {
 
             Case laCase = damier.getCase(cibleX, cibleY);
 
-            // Si la case existe et qu'elle est soit NEUTRE, soit ALLUMÉE
+            
             if (laCase != null && laCase.estAccessible()) {
-                return false; // Il y a encore un chemin possible !
+                return false; 
             }
         }
-        return true; // Vraiment coincé
+        return true; 
     }
 
     public Damier getDamier() {
-        return this.damier; // On renvoie l'objet damier au lieu de l'erreur
+        return this.damier; 
     }
 
     public Cavalier getCavalier() {
-        return this.cavalier; // On renvoie l'objet cavalier au lieu de l'erreur
+        return this.cavalier; 
     }
 
     public int getNbCoups() {

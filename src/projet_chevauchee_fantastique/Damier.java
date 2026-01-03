@@ -24,12 +24,6 @@ public class Damier {
         initialiserNiveau2();
         }
     }
-
-    Damier(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-
     private void initialiserNiveau1() {
         boolean[][] configInitiale = {
             {false, true, false, true, false}, 

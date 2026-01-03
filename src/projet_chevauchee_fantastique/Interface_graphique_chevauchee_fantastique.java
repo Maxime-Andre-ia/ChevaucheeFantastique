@@ -55,24 +55,21 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
         this.setTitle("La Chevauchée Fantastique");
         this.setSize(600, 650);
 
-        // On définit la disposition globale (Etape 7 enrichie)
         this.getContentPane().setLayout(new java.awt.BorderLayout());
 
-        // --- ÉTAPE 12 : CRÉATION DU LABEL D'ÉTAT ---
         labelEtat = new javax.swing.JLabel("Bonne chance !", javax.swing.SwingConstants.CENTER);
         labelEtat.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
         this.getContentPane().add(labelEtat, java.awt.BorderLayout.SOUTH); // Placé en bas
 
         JPanel panneauHaut = new JPanel(new java.awt.GridLayout(2, 1));
 
-// 2. On configure le bouton et on l'ajoute au panneauHaut
         btnRecommencer = new javax.swing.JButton("Recommencer le niveau");
         btnRecommencer.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 14));
         btnRecommencer.addActionListener(e -> {
             jeu.chargerNiveau(jeu.getNiveauActuel());
             reinitialiserInterface();
         });
-        panneauHaut.add(btnRecommencer); // Ajout au petit panneau
+        panneauHaut.add(btnRecommencer); 
 
         labelCoups = new javax.swing.JLabel("Nombre de coups : 0", javax.swing.SwingConstants.CENTER);
         labelCoups.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 16));
@@ -81,7 +78,7 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
         this.getContentPane().add(panneauHaut, java.awt.BorderLayout.NORTH);
 
         this.panneauGrille = new javax.swing.JPanel(new java.awt.GridLayout(5, 5));
-        this.getContentPane().add(panneauGrille, java.awt.BorderLayout.CENTER); // Au centre
+        this.getContentPane().add(panneauGrille, java.awt.BorderLayout.CENTER); 
 
         initialiserPlateau(panneauGrille);
         actualiserAffichage();
@@ -89,17 +86,17 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     }
 
     private void initialiserPlateau(JPanel panneauGrille) {
-        int taille = jeu.getDamier().getTaille(); // Utilise bien la taille dynamique !
-        for (int i = 0; i < taille; i++) { // Lignes
-            for (int j = 0; j < taille; j++) { // Colonnes
+        int taille = jeu.getDamier().getTaille(); 
+        for (int i = 0; i < taille; i++) { 
+            for (int j = 0; j < taille; j++) { 
                 JButton btn = new JButton();
-                this.grilleBoutons[i][j] = btn; // i = x, j = y
+                this.grilleBoutons[i][j] = btn; 
 
                 final int x = i;
                 final int y = j;
 
                 btn.addActionListener(e -> {
-                    this.jeu.tenterUnCoup(x, y); // x et y doivent correspondre à la grille
+                    this.jeu.tenterUnCoup(x, y); 
                     actualiserAffichage();
                 });
                 panneauGrille.add(btn);
@@ -108,17 +105,13 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     }
 
     private void reinitialiserInterface() {
-        // 1. On vide le panneau
         panneauGrille.removeAll();
 
-        // 2. On récupère la taille actuelle (5 ou 8)
         int taille = jeu.getDamier().getTaille();
         panneauGrille.setLayout(new java.awt.GridLayout(taille, taille));
 
-        // 3. On recrée le tableau de boutons
         this.grilleBoutons = new javax.swing.JButton[taille][taille];
 
-        // 4. On relance la création des boutons et l'affichage
         initialiserPlateau(panneauGrille);
 
         panneauGrille.revalidate();
@@ -129,32 +122,24 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     }
 
     private void passerAuNiveauSuivant() {
-        // 1. On passe au niveau 2 dans le moteur de jeu
         int niveauSuivant = jeu.getNiveauActuel() + 1;
         jeu.chargerNiveau(niveauSuivant);
 
-        // 2. On vide visuellement le panneau actuel (enlève les 25 boutons du niv 1)
         if (panneauGrille != null) {
             panneauGrille.removeAll();
         }
 
-        // 3. On récupère la nouvelle taille (ex: 8)
         int nouvelleTaille = jeu.getDamier().getTaille();
 
-        // 4. On change la grille visuelle pour accepter 8x8 boutons
         panneauGrille.setLayout(new java.awt.GridLayout(nouvelleTaille, nouvelleTaille));
 
-        // 5. On recrée le tableau de stockage des boutons à la bonne taille
         this.grilleBoutons = new javax.swing.JButton[nouvelleTaille][nouvelleTaille];
 
-        // 6. On recrée les nouveaux boutons et on les ajoute au panneau
         initialiserPlateau(panneauGrille);
 
-        // 7. On rafraîchit l'interface pour afficher les changements
         panneauGrille.revalidate();
         panneauGrille.repaint();
         actualiserAffichage();
-        // 8. On met à jour le texte
         labelEtat.setText("Niveau " + niveauSuivant + " : Bonne chance !");
     }
 
@@ -167,23 +152,17 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
         Cavalier cavalier = this.jeu.getCavalier();
         int taille = damier.getTaille();
 
-        // --- 1. DÉFINITION DES COULEURS MODERNES ---
-        Color rougeCorail = new Color(231, 76, 60);    // Cases à éteindre
-// Cases à éteindre
+        Color rougeCorail = new Color(231, 76, 60);    
         Color bleuNuit = new Color(44, 62, 80);
-        // Optionnel : pour les bordures
-         // Cases vides / fond
 
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
                 JButton btn = this.grilleBoutons[i][j];
                 Case laCase = damier.getCase(i, j);
 
-                // Désactiver l'effet de focus bleu moche de Windows sur les boutons
                 btn.setFocusPainted(false);
                 btn.setBorder(javax.swing.BorderFactory.createLineBorder(bleuNuit, 1));
 
-                // --- 2. GESTION DES COULEURS DE FOND ---
                 if (laCase != null && laCase.estAllumee()) {
                     btn.setBackground(rougeCorail);
                 } else {
@@ -200,7 +179,6 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
             }
         }
 
-        // --- 5. MISE À JOUR DES LABELS ---
         labelCoups.setText("Nombre de coups : " + jeu.getNbCoups());
 
         if (jeu.getDamier().estNiveauTermine()) {
