@@ -5,10 +5,7 @@
 package projet_chevauchee_fantastique;
 
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -26,7 +23,7 @@ public final class Interface_graphique_chevauchee_fantastique extends javax.swin
     private final Jeu jeu;
     private JButton[][] grilleBoutons;
     private final javax.swing.JLabel labelEtat;
-    private javax.swing.JLabel labelCoups;
+    private final javax.swing.JLabel labelCoups;
     private final javax.swing.JPanel panneauGrille;
     private final javax.swing.JButton btnRecommencer;
     
